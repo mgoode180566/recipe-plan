@@ -36,7 +36,7 @@ jobs:
       - name: Deploy to AWS Elastic Beanstalk
         run: |
           # Zip the application JAR file
-          ls *.*
+          ls target/*.*
           zip -r deploy.zip target/*.jar  
 
           # Upload application version to Elastic Beanstalk S3 bucket
