@@ -4,7 +4,6 @@
     distribution: 'corretto'
     java-version: '17'
 
-
     name: Deploy to AWS Elastic Beanstalk
 
     on:
