@@ -3,3 +3,52 @@
   with:
     distribution: 'corretto'
     java-version: '17'
+
+
+    name: Deploy to AWS Elastic Beanstalk
+
+    on:
+      push:
+        branches:
+          - main  # Deploy only when pushing to the main branch
+
+    jobs:
+      deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+          - name: Checkout Code
+            uses: actions/checkout@v3
+
+          - name: Set Up JDK
+            uses: actions/setup-java@v3
+            with:
+              distribution: 'temurin'
+              java-version: '17'
+
+          - name: Build with Maven
+            run: mvn clean package -DskipTests
+
+          - name: Install AWS CLI
+            run: |
+              sudo apt-get update
+              sudo apt-get install -y awscli
+
+          - name: Deploy to AWS Elastic Beanstalk
+            run: |
+              zip -r deploy.zip target/*.jar  
+              aws elasticbeanstalk create-application-version \
+                --application-name my-springboot-app \
+                --version-label v${{ github.run_number }} \
+                --source-bundle S3Bucket="my-eb-bucket",S3Key="deploy.zip" \
+                --region us-east-1
+              
+              aws elasticbeanstalk update-environment \
+                --application-name my-springboot-app \
+                --environment-name my-springboot-env \
+                --version-label v${{ github.run_number }}
+            env:
+              AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+              AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+              AWS_REGION: ${{ secrets.AWS_REGION }}
+
