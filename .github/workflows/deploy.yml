@@ -1,4 +1,4 @@
-- name: Set Up JDK
+  name: Set Up JDK
   uses: actions/setup-java@v3
   with:
     distribution: 'corretto'
