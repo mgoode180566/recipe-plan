@@ -19,5 +19,6 @@ public class RecipeService {
 		return webClient.get().uri(String.format("/search?q=%s&app_id=f1457677&app_key=542fccae7cf8312a1af507b7c8b3969c",query))
 											.retrieve()
 											.bodyToMono(String.class);
+		
 	}
 }
