@@ -17,4 +17,7 @@ public class RecipeSearchController {
 	public Mono<String> getRecipes(@RequestParam String query) {
 		return recipeService.search(query);
 	}
+	
+	@GetMapping("/hello")
+	public String getMessage() { return "Hello......................";}
 }
