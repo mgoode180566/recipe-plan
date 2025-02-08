@@ -30,6 +30,7 @@ jobs:
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
           sudo ./aws/install --update  # Force update of existing AWS CLI installation
+          
 
       # Step 5: Deploy to Elastic Beanstalk
       - name: Deploy to AWS Elastic Beanstalk
