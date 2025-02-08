@@ -1,95 +1,101 @@
-#name: Deploy to AWS Elastic Beanstalk
-#
-#on:
-#  push:
-#    branches:
-#      - main  # Deploy only when pushing to the main branch
-#
-#jobs:
-#  deploy:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      # Step 1: Checkout the code
-#      - name: Checkout Code
-#        uses: actions/checkout@v3
-#
-#      # Step 2: Set up JDK (You can use Corretto or Temurin based on your preference)
-#      - name: Set Up JDK
-#        uses: actions/setup-java@v3
-#        with:
-#          distribution: 'corretto'  # You chose 'corretto', so we keep this
-#          java-version: '17'
-#
-#      # Step 3: Build with Maven
-#      - name: Build with Maven
-#        run: mvn clean package -DskipTests  # Skipping tests for faster build (optional)
-#
-#      - name: Install AWS CLI v2
-#        run: |
-#          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-#          unzip awscliv2.zip
-#          sudo ./aws/install --update  # Force update of existing AWS CLI installation
-#
-#
-#      # Step 5: Deploy to Elastic Beanstalk
-#      - name: Deploy to AWS Elastic Beanstalk
-#        run: |
-#          # Zip the application JAR file
-#          ls target/*.*
-#          zip -r deploy.zip target/*.jar
-#
-#          # Upload application version to Elastic Beanstalk S3 bucket
-#          aws s3 cp deploy.zip s3://s3-recipe-planner/deploy.zip --debug
-#
-#          # Create a new Elastic Beanstalk application version
-#          aws elasticbeanstalk create-application-version \
-#            --application-name my-springboot-app \
-#            --version-label v${{ github.run_number }} \
-#            --source-bundle S3Bucket="s3-recipe-planner",S3Key="deploy.zip" \
-#            --region us-east-1
-#
-#          # Update the environment to use the newly created version
-#          aws elasticbeanstalk update-environment \
-#            --application-name my-springboot-app \
-#            --environment-name my-springboot-env \
-#            --version-label v${{ github.run_number }} \
-#            --region us-east-1
-#        env:
-#          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          AWS_REGION: ${{ secrets.AWS_REGION }}
-
-name: Test AWS Secrets
+name: Deploy to AWS Elastic Beanstalk
 
 on:
   push:
     branches:
-      - main
+      - main  # Deploy only when pushing to the main branch
 
 jobs:
-  test-aws-secrets:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      # Step 1: Checkout the code
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Set up AWS CLI
-        uses: aws-actions/configure-aws-credentials@v1
+      # Step 2: Set up JDK (You can use Corretto or Temurin based on your preference)
+      - name: Set Up JDK
+        uses: actions/setup-java@v3
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          distribution: 'corretto'  # You chose 'corretto', so we keep this
+          java-version: '17'
 
-      - name: Verify AWS credentials and list S3 buckets
-        run: |
-          aws s3 ls
-          ls
+      # Step 3: Build with Maven
+      - name: Build with Maven
+        run: mvn clean package -DskipTests  # Skipping tests for faster build (optional)
 
-      - name: Upload file to S3
+      - name: Install AWS CLI v2
         run: |
-          # Replace 'path/to/your/file' with the actual file path in your repository
-          # Replace 'your-s3-bucket' with the name of your S3 bucket
-          aws s3 cp ./pom.xml s3://s3-recipe-planner/pom.xml
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install --update  # Force update of existing AWS CLI installation
+          
+          uses: aws-actions/configure-aws-credentials@v1
+              with:
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                aws-region: ${{ secrets.AWS_REGION }}
+
+
+      # Step 5: Deploy to Elastic Beanstalk
+      - name: Deploy to AWS Elastic Beanstalk
+        run: |
+          # Zip the application JAR file
+          ls target/*.*
+          zip -r deploy.zip target/*.jar
+
+          # Upload application version to Elastic Beanstalk S3 bucket
+          aws s3 cp deploy.zip s3://s3-recipe-planner/deploy.zip --debug
+          
+          # Create a new Elastic Beanstalk application version
+          aws elasticbeanstalk create-application-version \
+            --application-name my-springboot-app \
+            --version-label v${{ github.run_number }} \
+            --source-bundle S3Bucket="s3-recipe-planner",S3Key="deploy.zip" \
+            --region us-east-1
+
+          # Update the environment to use the newly created version
+          aws elasticbeanstalk update-environment \
+            --application-name my-springboot-app \
+            --environment-name my-springboot-env \
+            --version-label v${{ github.run_number }} \
+            --region us-east-1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+
+#name: Test AWS Secrets
+#
+#on:
+#  push:
+#    branches:
+#      - main
+#
+#jobs:
+#  test-aws-secrets:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#
+#      - name: Set up AWS CLI
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ${{ secrets.AWS_REGION }}
+#
+#      - name: Verify AWS credentials and list S3 buckets
+#        run: |
+#          aws s3 ls
+#          ls
+#
+#      - name: Upload file to S3
+#        run: |
+#          # Replace 'path/to/your/file' with the actual file path in your repository
+#          # Replace 'your-s3-bucket' with the name of your S3 bucket
+#          aws s3 cp ./pom.xml s3://s3-recipe-planner/pom.xml
 
