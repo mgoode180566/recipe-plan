@@ -46,7 +46,7 @@ jobs:
           zip -r deploy.zip target/*.jar
 
           # Upload application version to Elastic Beanstalk S3 bucket
-          aws s3 cp ./pom.xml s3://s3-recipe-planner/pom.xml
+          aws s3 cp deploy.zip s3://s3-recipe-planner/deploy.zip
           
           # Create a new Elastic Beanstalk application version
           aws elasticbeanstalk create-application-version \
