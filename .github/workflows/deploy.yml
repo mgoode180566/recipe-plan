@@ -85,4 +85,5 @@ jobs:
       - name: Verify AWS credentials and list S3 buckets
         run: |
           aws s3 ls
+          aws s3 ls
 
