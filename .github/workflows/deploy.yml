@@ -52,7 +52,7 @@ jobs:
           # Update the environment to use the newly created version
           aws elasticbeanstalk update-environment \
             --application-name recipe-plan-0.0.1-SNAPSHOT.jar \
-            --environment-name Recipe-planner-env
+            --environment-name Recipe-planner-env \
             --version-label v32 \
             --region us-east-1
 
