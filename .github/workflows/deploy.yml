@@ -91,5 +91,5 @@ jobs:
         run: |
           # Replace 'path/to/your/file' with the actual file path in your repository
           # Replace 'your-s3-bucket' with the name of your S3 bucket
-          aws s3 cp ./deploy.yml s3://your-s3-bucket/your-file-name
+          aws s3 cp ./pom.xml s3://s3-recipe-planner/pom.xml
 
