@@ -57,8 +57,7 @@ jobs:
 
           # Update the environment to use the newly created version
           aws elasticbeanstalk update-environment \
-            --application-name my-springboot-app \
-            --environment-name my-springboot-env \
+            --application-name recipe-plan-0.0.1-SNAPSHOT.jar \
             --version-label v${{ github.run_number }} \
             --region us-east-1
 #        env:
