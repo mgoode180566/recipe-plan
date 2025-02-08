@@ -46,7 +46,7 @@ jobs:
           aws elasticbeanstalk create-application-version \
             --application-name my-springboot-app \
             --version-label v${{ github.run_number }} \
-            --source-bundle S3Bucket="my-eb-bucket",S3Key="deploy.zip" \
+            --source-bundle S3Bucket="s3-recipe-planner",S3Key="deploy.zip" \
             --region us-east-1
 
           # Update the environment to use the newly created version
