@@ -53,6 +53,7 @@ jobs:
           aws elasticbeanstalk update-environment \
             --application-name recipe-plan-0.0.1-SNAPSHOT.jar \
             --environment-name Recipe-planner-env
+            --version-label v32 \
             --region us-east-1
 
 #name: Test AWS Secrets
