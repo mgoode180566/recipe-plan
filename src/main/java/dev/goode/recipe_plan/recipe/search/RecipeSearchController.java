@@ -25,4 +25,9 @@ public class RecipeSearchController {
 	public List<String> getPopularIngredients() {
 		return ingredientService.getPopularIngredients();
 	}
+	
+	@GetMapping("/ai")
+	public String getAI() {
+		return "Number 5 is alive!";
+	}
 }
